@@ -22,27 +22,30 @@ class Post(Base):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-
-class Media(Base):
-    __tablename__ = "media"
-    id = Column(Integer, primary_key=True)
-    type = Column(String(50), nullable=False)
-    url = Column(String(50), nullable=False)
-    post_id = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("post.id"))
-    post = relationship(Post)
+    
+    
 
 class Comment(Base):
     __tablename__ = "comment"
     id = Column(Integer, primary_key=True)
     comment_type = Column(String(100), nullable=True)
-    author_id = Column(String(50), nullable=False)
-    post_id = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("post"))
+    author_id = Column(Integer, ForeignKey("user.id"))
+    post_id = Column(Integer, ForeignKey("post.id"))
     post = relationship(Post)
+    user = relationship(User)
+
+
+class Likes(Base):
+    __tablename__ = "likes"
+    id = Column(Integer, primary_key=True)
+    comment_id = Column(Integer, ForeignKey("comment.id"))
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship(User)
+    comment = relationship(Comment)
+
+
     def to_dict(self):
         return {}
 
